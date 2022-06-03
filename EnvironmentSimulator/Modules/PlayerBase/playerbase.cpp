@@ -411,18 +411,21 @@ void ScenarioPlayer::ViewerFrame(bool init)
 				entity->trail_->AddPoint(osg::Vec3(obj->pos_.GetX(), obj->pos_.GetY(), obj->pos_.GetZ() + (obj->GetId() + 1) * TRAIL_Z_OFFSET));
 			}
 
-			// on screen text following each entity
-			snprintf(entity->on_screen_info_.string_, sizeof(entity->on_screen_info_.string_),
-				" %s (%d) %.2fm\n %.2fkm/h road %d lane %d/%.2f s %.2f\n x %.2f y %.2f hdg %.2f\n osi x %.2f y %.2f \n|",
-				obj->name_.c_str(), obj->GetId(), obj->odometer_,
-				3.6 * obj->speed_, obj->pos_.GetTrackId(), obj->pos_.GetLaneId(), fabs(obj->pos_.GetOffset()) < SMALL_NUMBER ? 0 : obj->pos_.GetOffset(),
-				obj->pos_.GetS(),
-				obj->pos_.GetX(),
-				obj->pos_.GetY(),
-				obj->pos_.GetH(),
-				obj->pos_.GetX() + obj->boundingbox_.center_.x_ * cos(obj->pos_.GetH()),
-				obj->pos_.GetY() + obj->boundingbox_.center_.x_ * sin(obj->pos_.GetH()));
-			entity->on_screen_info_.osg_text_->setText(entity->on_screen_info_.string_);
+			if (entity->on_screen_info_.osg_text_)
+			{
+				// on screen text following each entity
+				snprintf(entity->on_screen_info_.string_, sizeof(entity->on_screen_info_.string_),
+					" %s (%d) %.2fm\n %.2fkm/h road %d lane %d/%.2f s %.2f\n x %.2f y %.2f hdg %.2f\n osi x %.2f y %.2f \n|",
+					obj->name_.c_str(), obj->GetId(), obj->odometer_,
+					3.6 * obj->speed_, obj->pos_.GetTrackId(), obj->pos_.GetLaneId(), fabs(obj->pos_.GetOffset()) < SMALL_NUMBER ? 0 : obj->pos_.GetOffset(),
+					obj->pos_.GetS(),
+					obj->pos_.GetX(),
+					obj->pos_.GetY(),
+					obj->pos_.GetH(),
+					obj->pos_.GetX() + obj->boundingbox_.center_.x_ * cos(obj->pos_.GetH()),
+					obj->pos_.GetY() + obj->boundingbox_.center_.x_ * sin(obj->pos_.GetH()));
+				entity->on_screen_info_.osg_text_->setText(entity->on_screen_info_.string_);
+			}
 		}
 
 		for (size_t i = 0; i < sensorFrustum.size(); i++)

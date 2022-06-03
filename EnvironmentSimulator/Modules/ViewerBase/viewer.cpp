@@ -2187,28 +2187,31 @@ EntityModel* Viewer::CreateEntityModel(std::string modelFilepath, osg::Vec4 trai
 	}
 
 	// on-screen text
-	emodel->on_screen_info_.geode_ = new osg::Geode;
-	emodel->on_screen_info_.osg_text_ = new osgText::Text;
-	emodel->on_screen_info_.osg_text_->setColor(osg::Vec4(1.0f, 1.0f, 0.1f, 1.0f));
-	emodel->on_screen_info_.osg_text_->setCharacterSize(10.0);
-	emodel->on_screen_info_.osg_text_->setCharacterSizeMode(osgText::TextBase::CharacterSizeMode::SCREEN_COORDS);
-	emodel->on_screen_info_.osg_text_->setAxisAlignment(osgText::Text::SCREEN);
-	emodel->on_screen_info_.osg_text_->setDrawMode(osgText::Text::TEXT);
-	emodel->on_screen_info_.osg_text_->setPosition(osg::Vec3(0.0, 0.0, boundingBox->dimensions_.height_ + 0.5));
-	emodel->on_screen_info_.osg_text_->setDataVariance(osg::Object::DYNAMIC);
-	emodel->on_screen_info_.osg_text_->setNodeMask(NodeMask::NODE_MASK_INFO_PER_OBJ);
-	emodel->on_screen_info_.osg_text_->setAlignment(osgText::Text::LEFT_BOTTOM);
+	if (GetNodeMaskBit(viewer::NodeMask::NODE_MASK_INFO_PER_OBJ))
+	{
+		emodel->on_screen_info_.geode_ = new osg::Geode;
+		emodel->on_screen_info_.osg_text_ = new osgText::Text;
+		emodel->on_screen_info_.osg_text_->setColor(osg::Vec4(1.0f, 1.0f, 0.1f, 1.0f));
+		emodel->on_screen_info_.osg_text_->setCharacterSize(10.0);
+		emodel->on_screen_info_.osg_text_->setCharacterSizeMode(osgText::TextBase::CharacterSizeMode::SCREEN_COORDS);
+		emodel->on_screen_info_.osg_text_->setAxisAlignment(osgText::Text::SCREEN);
+		emodel->on_screen_info_.osg_text_->setDrawMode(osgText::Text::TEXT);
+		emodel->on_screen_info_.osg_text_->setPosition(osg::Vec3(0.0, 0.0, boundingBox->dimensions_.height_ + 0.5));
+		emodel->on_screen_info_.osg_text_->setDataVariance(osg::Object::DYNAMIC);
+		emodel->on_screen_info_.osg_text_->setNodeMask(NodeMask::NODE_MASK_INFO_PER_OBJ);
+		emodel->on_screen_info_.osg_text_->setAlignment(osgText::Text::LEFT_BOTTOM);
 
-	osg::StateSet* text_state = emodel->on_screen_info_.osg_text_->getOrCreateStateSet();
-	text_state->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
-	osg::ref_ptr<osg::BlendFunc> bf2 = new osg::BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	text_state->setAttributeAndModes(bf2);
-	text_state->setAttributeAndModes(emodel->blend_color_);
-	text_state->setMode(GL_LIGHTING, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
-	text_state->setRenderBinDetails(INT_MAX-1, "RenderBin", osg::StateSet::RenderBinMode::OVERRIDE_RENDERBIN_DETAILS);
+		osg::StateSet* text_state = emodel->on_screen_info_.osg_text_->getOrCreateStateSet();
+		text_state->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
+		osg::ref_ptr<osg::BlendFunc> bf2 = new osg::BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		text_state->setAttributeAndModes(bf2);
+		text_state->setAttributeAndModes(emodel->blend_color_);
+		text_state->setMode(GL_LIGHTING, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
+		text_state->setRenderBinDetails(INT_MAX-1, "RenderBin", osg::StateSet::RenderBinMode::OVERRIDE_RENDERBIN_DETAILS);
 
-	emodel->on_screen_info_.geode_->addDrawable(emodel->on_screen_info_.osg_text_);
-	group->addChild(emodel->on_screen_info_.geode_.get());
+		emodel->on_screen_info_.geode_->addDrawable(emodel->on_screen_info_.osg_text_);
+		group->addChild(emodel->on_screen_info_.geode_.get());
+	}
 
 	return emodel;
 }
